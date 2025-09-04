@@ -4,8 +4,10 @@ This RPG data streaming assignment was created by Fernando Restituto with
 pixel RPG characters created by Sean Browning.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 
@@ -75,9 +77,40 @@ static public class AssignmentPart1
 
     static public void SavePartyButtonPressed()
     {
-        foreach (PartyCharacter pc in GameContent.partyCharacters)
+        
+        const string path = "C:\\Users\\user\\Documents\\GitHub\\Multiplayer-Systems-Labs\\Assets\\";
+
+        //Write each directory name to a file
+        using (StreamWriter sw = new StreamWriter("Party.txt"))
         {
-            Debug.Log("PC class id == " + pc.classID);
+            foreach (PartyCharacter pc in GameContent.partyCharacters)
+            {
+                sw.WriteLine(pc.classID);
+            }
+
+            sw.Close();
+        }
+
+        try
+        {
+            // Create an instance of StreamReader to read from a file.
+            // The using statement also closes the StreamReader.
+            using (StreamReader sr = new StreamReader("Party.txt"))
+            {
+                string line;
+                // Read and display lines from the file until the end of
+                // the file is reached.
+                while ((line = sr.ReadLine()) != null)
+                {
+                    Debug.Log(line);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            // Let the user know what went wrong.
+            Debug.Log("The file could not be read:");
+            Debug.Log(e.Message);
         }
     }
 
@@ -85,12 +118,22 @@ static public class AssignmentPart1
     {
         GameContent.partyCharacters.Clear();
 
-        PartyCharacter pc = new PartyCharacter(1, 10, 10, 10, 10, 10);
-        GameContent.partyCharacters.AddLast(pc);
-        pc = new PartyCharacter(2, 11, 11, 11, 11, 11);
-        GameContent.partyCharacters.AddLast(pc);
-        pc = new PartyCharacter(3, 12, 12, 12, 12, 12);
-        GameContent.partyCharacters.AddLast(pc);
+        //PartyCharacter pc = new PartyCharacter(1, 10, 10, 10, 10, 10);
+        //GameContent.partyCharacters.AddLast(pc);
+        //pc = new PartyCharacter(2, 11, 11, 11, 11, 11);
+        //GameContent.partyCharacters.AddLast(pc);
+        //pc = new PartyCharacter(3, 12, 12, 12, 12, 12);
+        //GameContent.partyCharacters.AddLast(pc);
+
+        //Read and show each line from the file
+        string line = "";
+        using (StreamReader sr = new StreamReader("Party.txt"))
+        {
+            while ((line = sr.ReadLine()) != null)
+            {
+                Debug.Log(line);
+            }
+        }
 
         GameContent.RefreshUI();
     }
