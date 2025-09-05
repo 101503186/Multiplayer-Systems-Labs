@@ -86,6 +86,11 @@ static public class AssignmentPart1
             foreach (PartyCharacter pc in GameContent.partyCharacters)
             {
                 sw.WriteLine(pc.classID);
+                sw.WriteLine(pc.health);
+                sw.WriteLine(pc.mana);
+                sw.WriteLine(pc.strength);
+                sw.WriteLine(pc.agility);
+                sw.WriteLine(pc.wisdom);
             }
 
             sw.Close();
@@ -118,21 +123,49 @@ static public class AssignmentPart1
     {
         GameContent.partyCharacters.Clear();
 
-        //PartyCharacter pc = new PartyCharacter(1, 10, 10, 10, 10, 10);
-        //GameContent.partyCharacters.AddLast(pc);
-        //pc = new PartyCharacter(2, 11, 11, 11, 11, 11);
-        //GameContent.partyCharacters.AddLast(pc);
-        //pc = new PartyCharacter(3, 12, 12, 12, 12, 12);
-        //GameContent.partyCharacters.AddLast(pc);
-
-        //Read and show each line from the file
-        string line = "";
-        using (StreamReader sr = new StreamReader("Party.txt"))
+        try 
         {
-            while ((line = sr.ReadLine()) != null)
+            string line = "";
+            using (StreamReader sr = new StreamReader("Party.txt"))
             {
-                Debug.Log(line);
+                int iterations = 1;
+                int classID = 0;
+                int health = 0;
+                int mana = 0;
+                int strength = 0;
+                int agility = 0;
+                int wisdom = 0;
+                
+
+                while ((line = sr.ReadLine()) != null)
+                {
+                    switch (iterations)
+                    {
+                        case 1:
+                            iterations++; classID = int.Parse(line); break;
+                        case 2:
+                            iterations++; health = int.Parse(line); break;
+                        case 3:
+                            iterations++; mana = int.Parse(line); break;
+                        case 4:
+                            iterations++; strength = int.Parse(line); break;
+                        case 5:
+                            iterations++; agility = int.Parse(line); break;
+                        case 6:
+                            wisdom = int.Parse(line);
+                            PartyCharacter partyCharacter = new PartyCharacter(classID, health, mana, strength, agility, wisdom);
+                            iterations = 1;
+                            GameContent.partyCharacters.AddLast(partyCharacter);
+                            break;
+                    }
+                }
             }
+        }
+        catch (Exception e)
+        {
+            // Let the user know what went wrong.
+            Debug.Log("The file could not be read:");
+            Debug.Log(e.Message);
         }
 
         GameContent.RefreshUI();
